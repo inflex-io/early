@@ -7,7 +7,7 @@ Add early return to any monad
 This package is a GHC plugin to add special syntax for early return in
 `do`-notation.
 
-The plugin is enabled in any module via,
+The plugin is enabled in any module via a pragma.
 
 ``` haskell
 {-# OPTIONS -F -pgmF=early #-}
