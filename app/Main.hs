@@ -74,7 +74,7 @@ questions tokens =
     (\((tok, loc), (ntok, _)) -> do
        guard (tok == (L.ITvarsym "?") && isEndOfStatement ntok)
        loc)
-    (zip tokens (drop 1 tokens ++ repeat (L.ITeof, Nothing)))
+    (zip tokens (drop 1 tokens))
 
 -- False negatives are an error, but false positives are fine, they
 -- will be rejected in a later stage when more information is
