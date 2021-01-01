@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE PackageImports #-}
 {-# LANGUAGE LambdaCase #-}
@@ -26,21 +27,33 @@ main = do
   contents <- T.readFile input -- gather metadata, transform content
   case tokenizeHaskellLoc contents of
     Nothing -> error "Bad lex!"
-    Just tokens -> print (questions tokens)
-  T.writeFile
-    output
-    (T.concat
-       [ "{-# LINE 1 \"" <> T.pack input <> "\" #-}\n"
-       , "{-# OPTIONS -fplugin=EarlyPlugin #-}\n"
-       , contents
-       ])
+    Just tokens -> do
+      print qs
+      T.writeFile
+        output
+        (T.concat
+           [ "{-# LINE 1 \"" <> T.pack input <> "\" #-}\n"
+           , "{-# OPTIONS -fplugin=EarlyPlugin -fplugin-opt=EarlyPlugin:"
+           , T.intercalate ","
+               (map
+                  (\Loc {..} ->
+                     T.intercalate
+                       "x"
+                       (map
+                          (T.pack . show)
+                          [line, startcol, endcol]))
+                  qs)
+           , " #-}\n"
+           , contents
+           ])
+      where qs = questions tokens
 
-questions :: [(L.Token, Maybe t)] -> [(L.Token, t)]
+questions :: [(L.Token, Maybe t)] -> [t]
 questions tokens =
   mapMaybe
     (\((tok, loc), (ntok, _)) -> do
        guard (tok == (L.ITvarsym "?") && isEndOfStatement ntok)
-       fmap (tok, ) loc)
+       loc)
     (zip tokens (drop 1 tokens ++ repeat (L.ITeof, Nothing)))
 
 -- False negatives are an error, but false positives are fine, they
@@ -65,8 +78,9 @@ isEndOfStatement =
     _ -> False
 
 deriving instance Eq L.Token
-data Loc = Loc {startline, startcol,endline,endcol :: !Int}
-  deriving (Eq, Ord, Show)
+data Loc = Loc
+  { line, startcol, endcol :: !Int
+  } deriving (Eq, Ord, Show)
 
 tokenizeHaskellLoc :: Text -> Maybe [(L.Token, Maybe Loc)]
 tokenizeHaskellLoc input =
@@ -111,7 +125,7 @@ srcSpanToLoc (RealSrcSpan rss) =
   let start = realSrcSpanStart rss
       end = realSrcSpanEnd rss
    in Just $
-      Loc (srcLocLine start) (srcLocCol start) (srcLocLine end) (srcLocCol end)
+      Loc (srcLocLine start) (srcLocCol start) (srcLocCol end)
 srcSpanToLoc _ = Nothing
 
 ----------------------------------------------------------------------------
