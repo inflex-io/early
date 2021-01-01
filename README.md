@@ -24,7 +24,7 @@ app = do
   pure (Right (path ++ magic))
 ```
 
-That's it!
+That's it! See `test/Main.hs` for full example.
 
 ## Special thanks
 
