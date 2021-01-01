@@ -52,6 +52,9 @@ main = do
 buildlocs :: [Loc] -> HashMap Int [Int]
 buildlocs = HM.fromListWith (<>) . map (\Loc{line,col} -> (line,pure col))
 
+-- Keep a running map of lines to cols to delete. Clear the lines
+-- after applying them, reducing the map size. Perhaps that's a
+-- premature optimization, but it's clean.
 strip :: HashMap Int [Int] -> Text -> Text
 strip locs0 = T.unlines . snd . List.mapAccumL cut locs0 . zip [1 ..] . T.lines
   where
