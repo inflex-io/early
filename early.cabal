@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8875b2ae60d75d5865537f59e5501018ac76eb340eaeedb1bb143e9c9e666b58
+-- hash: d44ffd2af780ff08fca770749630178b8f6bcc2b179d357c23281838ead6e5fa
 
 name:           early
 version:        0.1.0.0
@@ -29,6 +29,7 @@ library
       Paths_early
   hs-source-dirs:
       src
+  ghc-options: -Wall
   build-depends:
       base >=4.7 && <5
     , ghc
@@ -41,7 +42,7 @@ executable early
       Paths_early
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:
       base >=4.7 && <5
     , ghc-lib-parser
@@ -55,7 +56,7 @@ test-suite early-test
       Paths_early
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:
       base >=4.7 && <5
     , early

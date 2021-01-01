@@ -1,12 +1,16 @@
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE PackageImports #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
-{-# OPTIONS_GHC -fno-warn-missing-fields #-}
+{-# OPTIONS_GHC -fno-warn-missing-fields -fno-warn-orphans #-}
 module Main (main) where
+import                            Control.Monad
 import                            Data.List (foldl')
+import                            Data.Maybe
 import                            Data.Text (Text)
 import qualified                  Data.Text as T
+import qualified                  Data.Text.IO as T
 import "ghc-lib-parser"           DynFlags
 import qualified "ghc-lib-parser" EnumSet as ES
 import "ghc-lib-parser"           FastString (mkFastString)
@@ -19,13 +23,48 @@ import                            System.Environment
 main :: IO ()
 main = do
   _:input:output:_ <- getArgs
-  contents <- readFile input -- gather metadata, transform content
-  writeFile
+  contents <- T.readFile input -- gather metadata, transform content
+  case tokenizeHaskellLoc contents of
+    Nothing -> error "Bad lex!"
+    Just tokens -> print (questions tokens)
+  T.writeFile
     output
-    ("{-# LINE 1 \"" <> input <> "\" #-}\n{-# OPTIONS -fplugin=EarlyPlugin #-}") -- pass any extra arguments
-  appendFile output contents
+    (T.concat
+       [ "{-# LINE 1 \"" <> T.pack input <> "\" #-}\n"
+       , "{-# OPTIONS -fplugin=EarlyPlugin #-}\n"
+       , contents
+       ])
 
+questions :: [(L.Token, Maybe t)] -> [(L.Token, t)]
+questions tokens =
+  mapMaybe
+    (\((tok, loc), (ntok, _)) -> do
+       guard (tok == (L.ITvarsym "?") && isEndOfStatement ntok)
+       fmap (tok, ) loc)
+    (zip tokens (drop 1 tokens ++ repeat (L.ITeof, Nothing)))
 
+-- False negatives are an error, but false positives are fine, they
+-- will be rejected in a later stage when more information is
+-- available.
+--
+-- A question-mark can only appear BEFORE the last do statement,
+-- therefore the only legitimate token following is a semi! which
+-- separates do statements, explicitly or implicitly.
+--
+-- This would permit also @where x = 1?; y = 2@, but that's fine. It
+-- will be flagged up as invalid during the parsing phase in the
+-- plugin. We will complain loudly as an error when any remaining ?'s
+-- are not resolved during that stage.
+--
+-- Additionally, it's not in operator position (e.g. x?y); we do not
+-- want to pick up valid syntax.
+isEndOfStatement :: L.Token -> Bool
+isEndOfStatement =
+  \case
+    L.ITsemi -> True
+    _ -> False
+
+deriving instance Eq L.Token
 data Loc = Loc {startline, startcol,endline,endcol :: !Int}
   deriving (Eq, Ord, Show)
 

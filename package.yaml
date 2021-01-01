@@ -12,6 +12,8 @@ dependencies:
 
 library:
   source-dirs: src
+  ghc-options:
+    - -Wall
   dependencies:
   - ghc
   - syb
@@ -24,6 +26,7 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -Wall
     dependencies:
     - ghc-lib-parser
     - text
@@ -36,5 +39,6 @@ tests:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -Wall
     dependencies:
       - early
