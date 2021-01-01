@@ -67,7 +67,7 @@ strip locs0 = T.unlines . snd . List.mapAccumL cut locs0 . zip [1 ..] . T.lines
                  where !text' =
                          foldl'
                            (\text'' col ->
-                              T.take (col - 1) text'' <> T.drop col text'')
+                              T.take (col - 1) text'' <> " " <> T.drop col text'')
                            text
                            cols
 
