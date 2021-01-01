@@ -30,6 +30,7 @@ executables:
     dependencies:
     - ghc-lib-parser
     - text
+    - unordered-containers
 
 tests:
   early-test:

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d44ffd2af780ff08fca770749630178b8f6bcc2b179d357c23281838ead6e5fa
+-- hash: 7d42fb372ffd14d3ca3822cff2200be567545bf428fdbf9813d54808e8dd7006
 
 name:           early
 version:        0.1.0.0
@@ -47,6 +47,7 @@ executable early
       base >=4.7 && <5
     , ghc-lib-parser
     , text
+    , unordered-containers
   default-language: Haskell2010
 
 test-suite early-test

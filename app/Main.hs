@@ -1,3 +1,5 @@
+{-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE PackageImports #-}
@@ -7,7 +9,10 @@
 {-# OPTIONS_GHC -fno-warn-missing-fields -fno-warn-orphans #-}
 module Main (main) where
 import                            Control.Monad
+import                            Data.HashMap.Strict (HashMap)
+import qualified                  Data.HashMap.Strict as HM
 import                            Data.List (foldl')
+import qualified                  Data.List as List
 import                            Data.Maybe
 import                            Data.Text (Text)
 import qualified                  Data.Text as T
@@ -28,7 +33,6 @@ main = do
   case tokenizeHaskellLoc contents of
     Nothing -> error "Bad lex!"
     Just tokens -> do
-      print qs
       T.writeFile
         output
         (T.concat
@@ -41,9 +45,25 @@ main = do
                      T.intercalate ":" (map (T.pack . show) [line, col]))
                   qs)
            , " #-}\n"
-           , contents
+           , strip (buildlocs qs) contents
            ])
       where qs = questions tokens
+
+buildlocs :: [Loc] -> HashMap Int [Int]
+buildlocs = HM.fromListWith (<>) . map (\Loc{line,col} -> (line,pure col))
+
+strip :: HashMap Int [Int] -> Text -> Text
+strip locs0 = T.unlines . snd . List.mapAccumL cut locs0 . zip [1 ..] . T.lines
+  where
+    cut locs (line, text) =
+      case HM.lookup line locs of
+        Nothing -> (locs, text)
+        Just cols -> (HM.delete line locs, text')
+          where !text' =
+                  foldl'
+                    (\text'' col -> T.take (col - 1) text'' <> T.drop col text'')
+                    text
+                    cols
 
 questions :: [(L.Token, Maybe t)] -> [t]
 questions tokens =
