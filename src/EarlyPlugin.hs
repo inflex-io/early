@@ -1,3 +1,4 @@
+{-# LANGUAGE PackageImports #-}
 module EarlyPlugin (plugin) where
 
 import Control.Monad.IO.Class (MonadIO (..))
@@ -8,11 +9,11 @@ import Data.Traversable       (for)
 
 import qualified Data.Generics as SYB
 
-import qualified ErrUtils    as Err
-import qualified GhcPlugins  as GHC
-import           HsExtension (GhcPs, NoExt (..))
-import           HsSyn
-import           SrcLoc
+import qualified "ghc" ErrUtils    as Err
+import qualified "ghc" GhcPlugins  as GHC
+import           "ghc" HsExtension (GhcPs, NoExt (..))
+import           "ghc" HsSyn
+import           "ghc" SrcLoc
 
 plugin :: GHC.Plugin
 plugin = GHC.defaultPlugin

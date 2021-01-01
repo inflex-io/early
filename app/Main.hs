@@ -1,19 +1,20 @@
+{-# LANGUAGE PackageImports #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
 {-# OPTIONS_GHC -fno-warn-missing-fields #-}
 module Main (main) where
-import System.Environment
-import Data.List (foldl')
-import Data.Text (Text)
-import qualified Data.Text as T
-import DynFlags
-import qualified EnumSet as ES
-import FastString (mkFastString)
-import GHC.LanguageExtensions
-import qualified Lexer as L
-import SrcLoc
-import StringBuffer
+import                            Data.List (foldl')
+import                            Data.Text (Text)
+import qualified                  Data.Text as T
+import "ghc-lib-parser"           DynFlags
+import qualified "ghc-lib-parser" EnumSet as ES
+import "ghc-lib-parser"           FastString (mkFastString)
+import "ghc-lib-parser"           GHC.LanguageExtensions
+import qualified "ghc-lib-parser" Lexer as L
+import "ghc-lib-parser"           SrcLoc
+import "ghc-lib-parser"           StringBuffer
+import                            System.Environment
 
 main :: IO ()
 main = do
@@ -25,7 +26,7 @@ main = do
   appendFile output contents
 
 
-data Loc = Loc !Int !Int !Int !Int
+data Loc = Loc {startline, startcol,endline,endcol :: !Int}
   deriving (Eq, Ord, Show)
 
 tokenizeHaskellLoc :: Text -> Maybe [(L.Token, Maybe Loc)]
