@@ -34,14 +34,11 @@ main = do
         (T.concat
            [ "{-# LINE 1 \"" <> T.pack input <> "\" #-}\n"
            , "{-# OPTIONS -fplugin=EarlyPlugin -fplugin-opt=EarlyPlugin:"
-           , T.intercalate ","
+           , T.intercalate
+               ","
                (map
                   (\Loc {..} ->
-                     T.intercalate
-                       "x"
-                       (map
-                          (T.pack . show)
-                          [line, startcol, endcol]))
+                     T.intercalate ":" (map (T.pack . show) [line, col]))
                   qs)
            , " #-}\n"
            , contents
@@ -79,7 +76,7 @@ isEndOfStatement =
 
 deriving instance Eq L.Token
 data Loc = Loc
-  { line, startcol, endcol :: !Int
+  { line, col :: !Int
   } deriving (Eq, Ord, Show)
 
 tokenizeHaskellLoc :: Text -> Maybe [(L.Token, Maybe Loc)]
@@ -123,9 +120,8 @@ fixupToken (L srcSpan tok) = (tok,srcSpanToLoc srcSpan)
 srcSpanToLoc :: SrcSpan -> Maybe Loc
 srcSpanToLoc (RealSrcSpan rss) =
   let start = realSrcSpanStart rss
-      end = realSrcSpanEnd rss
    in Just $
-      Loc (srcLocLine start) (srcLocCol start) (srcLocCol end)
+      Loc (srcLocLine start) (srcLocCol start)
 srcSpanToLoc _ = Nothing
 
 ----------------------------------------------------------------------------
