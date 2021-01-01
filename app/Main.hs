@@ -56,14 +56,17 @@ strip :: HashMap Int [Int] -> Text -> Text
 strip locs0 = T.unlines . snd . List.mapAccumL cut locs0 . zip [1 ..] . T.lines
   where
     cut locs (line, text) =
-      case HM.lookup line locs of
-        Nothing -> (locs, text)
-        Just cols -> (HM.delete line locs, text')
-          where !text' =
-                  foldl'
-                    (\text'' col -> T.take (col - 1) text'' <> T.drop col text'')
-                    text
-                    cols
+      if HM.null locs
+        then (locs, text)
+        else case HM.lookup line locs of
+               Nothing -> (locs, text)
+               Just cols -> (HM.delete line locs, text')
+                 where !text' =
+                         foldl'
+                           (\text'' col ->
+                              T.take (col - 1) text'' <> T.drop col text'')
+                           text
+                           cols
 
 questions :: [(L.Token, Maybe t)] -> [t]
 questions tokens =
