@@ -50,6 +50,11 @@ The `early` and `earlyThen` are driven by the `Early` class, which any
 functor-like data type can implement.
 
 ``` haskell
+early :: (Monad m, Early f) => m (f a) -> (a -> m (f b)) -> m (f b)
+earlyThen :: (Monad m, Early f) => m (f a) -> m (f b) -> m (f b)
+```
+
+``` haskell
 class Functor f => Early f where
   dispatch :: Applicative m => f a -> (a -> m (f b)) -> m (f b)
 ```
