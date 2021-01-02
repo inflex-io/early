@@ -74,7 +74,7 @@ class Functor f => Early f where
 ```
 
 Two provided instances out of the box are `Either e` and `Maybe`, but
-others can be added freely, such as a a `Failure e a` type of your
+others can be added freely, such as a `Failure e a` type of your
 library, etc.
 
 ### Why not `ExceptT` or exceptions?
@@ -97,6 +97,21 @@ termination and failure handling is inspired
 `Early` class resembles the
 [Try trait](https://doc.rust-lang.org/std/ops/trait.Try.html), but it
 slightly different, as Haskell has higher-kinded types.
+
+Additionally, one can take a Rust-like view of error handling in
+Haskell:
+
+|Use-case|Haskell|Rust|
+|---:|---:|
+|Unrecoverable errors|Throwing exceptions|Panics|
+|Recoverable errors|Return `Either`/`Maybe`|Return `Result`/`Some`|
+
+This plugin allows one to structure their code in such a way.
+
+## Future Work
+
+A small library of short-circuiting `traverse`/`fold` would let one
+use actions that return `Either`/`Maybe`.
 
 ## Special thanks
 
