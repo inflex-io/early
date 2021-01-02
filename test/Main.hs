@@ -21,8 +21,7 @@ main = do
 
 app :: IO (Either Error String)
 app = do
-  -- path <- grabEnv "PATH"
-  grabEnv "X"?
-  -- magic <- grabEnv "MAGIC"
-  -- pure (Right (path ++ magic))
-  pure (Right "")
+  path <- grabEnv "PATH"?
+  grabEnv "PWD"?
+  magic <- grabEnv "PWD"?
+  pure (Right (path ++ magic))

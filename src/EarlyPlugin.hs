@@ -27,17 +27,17 @@ pluginImpl options _modSummary m = do
     Right [] -> pure m
     Right locs -> do
       dflags <- GHC.getDynFlags
-      -- debug $ GHC.showPpr dflags (GHC.hpm_module m)
-      -- debug "===>"
+      debug $ GHC.showPpr dflags (GHC.hpm_module m)
+      debug "===>"
       hpm_module' <- transform locs dflags (GHC.hpm_module m)
       debug $ show locs
-      -- debug $ GHC.showPpr dflags (hpm_module')
+      debug $ GHC.showPpr dflags (hpm_module')
       let module' = m {GHC.hpm_module = hpm_module'}
       return module'
 
 debug :: MonadIO m => String -> m ()
-debug = liftIO . putStrLn
--- debug _ = pure ()
+-- debug = liftIO . putStrLn
+debug _ = pure ()
 
 transform ::
      [Loc]
@@ -83,7 +83,49 @@ transformStmt (L stmtloc current) rest =
              l
              r)
       ]
+    BindStmt x lpat lexpr l r ->
+      [ L stmtloc
+          (BodyStmt
+             x
+             (L GHC.noSrcSpan
+                (HsApp
+                   NoExt
+                   (L GHC.noSrcSpan
+                      (HsApp
+                         NoExt
+                         (L GHC.noSrcSpan
+                            (HsVar NoExt (L GHC.noSrcSpan earlyName)))
+                         lexpr))
+                   (makeLambda
+                      lpat
+                      (L GHC.noSrcSpan
+                         (HsDo NoExt DoExpr (L GHC.noSrcSpan rest))))))
+             l
+             r)
+      ]
     _ -> L stmtloc current : rest
+
+-- | Making a lambda took me like 15 minutes of endless types. So this
+-- is in a function.
+makeLambda :: LPat GhcPs -> LHsExpr GhcPs -> LHsExpr GhcPs
+makeLambda lpat lexpr =
+  L GHC.noSrcSpan
+    (HsLam
+       NoExt
+       (MG
+          NoExt
+          (L GHC.noSrcSpan
+             [ L GHC.noSrcSpan
+                 (Match
+                    NoExt
+                    LambdaExpr
+                    [lpat]
+                    (GRHSs
+                       NoExt
+                       [L GHC.noSrcSpan (GRHS NoExt [] lexpr)]
+                       (L GHC.noSrcSpan (EmptyLocalBinds NoExt))))
+             ])
+          GHC.Generated))
 
 stmtIsEarly :: [Loc] -> LStmt GhcPs (LHsExpr GhcPs) -> Bool
 stmtIsEarly locs (L l BindStmt {}) = any (flip srcSpanFollowedBy l) locs
