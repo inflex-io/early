@@ -95,7 +95,7 @@ The syntax and concept of using simple return values for early
 termination and failure handling is inspired
 [by Rust's error handling](https://doc.rust-lang.org/rust-by-example/error/result/enter_question_mark.html). The
 `Early` class resembles the
-[Try trait](https://doc.rust-lang.org/std/ops/trait.Try.html), but it
+[Try trait](https://doc.rust-lang.org/std/ops/trait.Try.html), but is
 slightly different, as Haskell has higher-kinded types.
 
 Additionally, one can take a Rust-like view of error handling in
