@@ -2,6 +2,20 @@
 
 Add early return to any `do`-expression
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [early](#early)
+    - [Description](#description)
+    - [How it works](#how-it-works)
+    - [Details](#details)
+        - [Why not `ExceptT` or exceptions?](#why-not-exceptt-or-exceptions)
+    - [Inspiration](#inspiration)
+    - [Special thanks](#special-thanks)
+
+<!-- markdown-toc end -->
+
+
 ## Description
 
 This package is a GHC plugin to add special syntax for early return in
