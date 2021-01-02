@@ -60,7 +60,7 @@ library, etc.
 
 ### Why not `ExceptT` or exceptions?
 
-Full explanation here: Motivation explained in detail in
+Full explanation here:
 [my recoverable errors post](https://chrisdone.com/posts/try-do/).
 
 Because `ExceptT` (or `ContT`) cannot be an
