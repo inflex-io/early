@@ -25,4 +25,3 @@ app = do
   grabEnv "PWD"?
   magic <- grabEnv "PATH"?
   pure (Right (path ++ magic))
-  where x = ()?; z = 2
