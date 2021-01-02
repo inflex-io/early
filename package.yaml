@@ -1,11 +1,11 @@
 name:                early
-version:             0.1.0.0
-github:              "githubuser/early"
+version:             0.0.0
+github:              "inflex-io/early"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2021 Author name here"
-description:         Please see the README on GitHub at <https://github.com/githubuser/early#readme>
+author:              Sky Above Limited
+maintainer:          chris@skyabove.io
+copyright:           "2021 Chris Done"
+description:         Please see the README on GitHub at <https://github.com/inflex-io/early#readme>
 
 dependencies:
 - base >= 4.7 && < 5
