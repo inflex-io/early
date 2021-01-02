@@ -18,5 +18,3 @@ early m f = do
 earlyThen :: Monad m => m (Either e a) -> m (Either e b) -> m (Either e b)
 earlyThen m f = early m (const f)
 {-# INLINE earlyThen #-}
-
---
