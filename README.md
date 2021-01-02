@@ -20,6 +20,9 @@ The plugin is enabled in any module via a pragma.
 The syntax `?` can be added to the end of any `do` statement to make
 it short-circuit when the action returns a `Left`.
 
+Suppose that `grabEnv :: String -> IO (Either Error String)`, then you
+can write this:
+
 ```haskell
 app :: IO (Either Error String)
 app = do
@@ -27,6 +30,9 @@ app = do
   magic <- grabEnv "MAGIC"?
   pure (Right (path ++ magic))
 ```
+
+Note the final `pure` in the do should wrap the type, as the type of
+the whole `do`-block has changed.
 
 That's it! See `test/Main.hs` for full example.
 
