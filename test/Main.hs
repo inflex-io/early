@@ -23,5 +23,5 @@ app :: IO (Either Error String)
 app = do
   path <- grabEnv "PATH"?
   grabEnv "PWD"?
-  magic <- grabEnv "PWD"?
+  magic <- grabEnv "PATH"?
   pure (Right (path ++ magic))

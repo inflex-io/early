@@ -18,6 +18,7 @@ import                 Text.Read
 plugin :: GHC.Plugin
 plugin = GHC.defaultPlugin
     { GHC.parsedResultAction = \cliOptions -> pluginImpl cliOptions
+    , GHC.pluginRecompile = GHC.purePlugin
     }
 
 pluginImpl :: [GHC.CommandLineOption] -> GHC.ModSummary -> GHC.HsParsedModule -> GHC.Hsc GHC.HsParsedModule
