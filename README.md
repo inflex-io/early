@@ -81,7 +81,7 @@ library, etc.
 ### Why not `ExceptT` or exceptions?
 
 Full explanation here:
-[my recoverable errors post](https://chrisdone.com/posts/try-do/).
+[my recoverable errors post](https://chrisdone.com/posts/recoverable-errors-in-haskell/).
 
 Because `ExceptT` (or `ContT`) cannot be an
 instance of `MonadUnliftIO`. It is not unliftable; this means that
