@@ -17,6 +17,7 @@ library:
   dependencies:
   - ghc
   - syb
+  - text
 
 executables:
   early:

@@ -2,9 +2,12 @@
 
 module Main (main) where
 
+import Control.Early
 import System.Environment
 
-data Error = MissingEnv String
+data Error =
+  MissingEnv String
+  deriving (Show)
 
 grabEnv :: String -> IO (Either Error String)
 grabEnv key = do
@@ -12,11 +15,14 @@ grabEnv key = do
   pure (maybe (Left (MissingEnv key)) Right result)
 
 main :: IO ()
-main = do result <- app
-          print result
+main = do
+  result <- app
+  print result
 
 app :: IO (Either Error String)
 app = do
-  path <- grabEnv "PATH"?
-  magic <- grabEnv "MAGIC"?
-  pure (Right (path ++ magic))
+  -- path <- grabEnv "PATH"
+  grabEnv "X"?
+  -- magic <- grabEnv "MAGIC"
+  -- pure (Right (path ++ magic))
+  pure (Right "")

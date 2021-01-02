@@ -47,7 +47,20 @@ main = do
            , " #-}\n"
            , strip (buildlocs qs) contents
            ])
-      where qs = questions tokens
+      where qs = questions (filter (not . isComment . fst) tokens)
+
+isComment :: L.Token -> Bool
+isComment =
+  \case
+    L.ITcomment_line_prag -> True
+    L.ITdocCommentNext _ -> True
+    L.ITdocCommentPrev _ -> True
+    L.ITdocCommentNamed _ -> True
+    L.ITdocSection _ _ -> True
+    L.ITdocOptions _ -> True
+    L.ITlineComment _ -> True
+    L.ITblockComment _ -> True
+    _ -> False
 
 buildlocs :: [Loc] -> HashMap Int [Int]
 buildlocs = HM.fromListWith (<>) . map (\Loc{line,col} -> (line,pure col))
