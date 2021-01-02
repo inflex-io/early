@@ -34,8 +34,8 @@ The plugin is enabled in any module via a pragma.
 
 The syntax `?` can be added to the end of any `do` statement to make
 it short-circuit when the action produces a certain "stop" result
-(such as `Left`, or `Nothing`; the particular type is type-class
-based, see the Details section below).
+(such as `Left`, or `Nothing`; **the particular type is type-class
+based**, see the Details section below).
 
 Suppose that `grabEnv :: String -> IO (Either Error String)`, then you
 can write this:
