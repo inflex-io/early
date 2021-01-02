@@ -21,7 +21,7 @@ main = do
 
 app :: IO (Either Error String)
 app = do
-  path <- grabEnv "PATH"?
+  path <- fmap (maybe (Left (MissingEnv "PATH")) Right) $ lookupEnv "PATH"?
   grabEnv "PWD"?
   magic <- grabEnv "PATH"?
   pure (Right (path ++ magic))
