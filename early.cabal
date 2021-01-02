@@ -4,23 +4,23 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 96b4f5683d58418bdb371bd7d1cc752cd580c7cd661bd6d88490169768de2219
+-- hash: 5ae0239a35301a0f1537fc98a9a61ef3fbb321c208c6d115ebb6591c1e77dc5f
 
 name:           early
-version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/early#readme>
-homepage:       https://github.com/githubuser/early#readme
-bug-reports:    https://github.com/githubuser/early/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2021 Author name here
+version:        0.0.0
+description:    Please see the README on GitHub at <https://github.com/inflex-io/early#readme>
+homepage:       https://github.com/inflex-io/early#readme
+bug-reports:    https://github.com/inflex-io/early/issues
+author:         Sky Above Limited
+maintainer:     chris@skyabove.io
+copyright:      2021 Chris Done
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/early
+  location: https://github.com/inflex-io/early
 
 library
   exposed-modules:
@@ -36,6 +36,7 @@ library
     , ghc
     , syb
     , text
+    , transformers
   default-language: Haskell2010
 
 executable early

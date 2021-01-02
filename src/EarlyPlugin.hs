@@ -5,9 +5,11 @@
 module EarlyPlugin (plugin) where
 
 import                 Control.Monad.IO.Class (MonadIO (..))
+import                 Control.Monad.Trans.State.Strict
 import qualified       Data.Generics as SYB
 import                 Data.Text (Text)
 import qualified       Data.Text as T
+import qualified "ghc" ErrUtils as Err
 import qualified "ghc" GhcPlugins as GHC
 import "ghc"           HsExtension (GhcPs)
 import "ghc"           HsSyn
@@ -30,11 +32,18 @@ pluginImpl options _modSummary m = do
       dflags <- GHC.getDynFlags
       debug $ GHC.showPpr dflags (GHC.hpm_module m)
       debug "===>"
-      hpm_module' <- transform locs dflags (GHC.hpm_module m)
-      debug $ show locs
-      debug $ GHC.showPpr dflags (hpm_module')
-      let module' = m {GHC.hpm_module = hpm_module'}
-      return module'
+      (hpm_module', locs_found) <-
+        runStateT (transform locs dflags (GHC.hpm_module m)) 0
+      if locs_found == length locs
+        then do
+          debug $ show locs
+          debug $ GHC.showPpr dflags (hpm_module')
+          let module' = m {GHC.hpm_module = hpm_module'}
+          return module'
+        else do
+          -- Later, we can collect the offending locations instead of
+          -- simply counting, and emit a more useful error message.
+          error "There is a question-mark used in a non-statement position!"
 
 debug :: MonadIO m => String -> m ()
 -- debug = liftIO . putStrLn
@@ -44,22 +53,33 @@ transform ::
      [Loc]
   -> GHC.DynFlags
   -> GHC.Located (HsModule GhcPs)
-  -> GHC.Hsc (GHC.Located (HsModule GhcPs))
+  -> StateT Int GHC.Hsc (GHC.Located (HsModule GhcPs))
 transform locs dflags = SYB.everywhereM (SYB.mkM (transformDo dflags locs))
 
-transformDo :: GHC.DynFlags -> [Loc] -> LHsExpr GhcPs -> GHC.Hsc (LHsExpr GhcPs)
+transformDo ::
+     GHC.DynFlags
+  -> [Loc]
+  -> LHsExpr GhcPs
+  -> StateT Int GHC.Hsc (LHsExpr GhcPs)
 transformDo dflags locs =
   \case
-    (L l (HsDo xdo DoExpr (L l' stmts@(_:_)))) ->
-      pure (L l (HsDo xdo DoExpr (L l' (transformStmts dflags locs stmts))))
+    (L l (HsDo xdo DoExpr (L l' stmts@(_:_)))) -> do
+      stmts' <- transformStmts dflags locs stmts
+      pure (L l (HsDo xdo DoExpr (L l' stmts')))
     e -> pure e
 
-transformStmts :: GHC.DynFlags -> [Loc] -> [LStmt GhcPs (LHsExpr GhcPs)] -> [LStmt GhcPs (LHsExpr GhcPs)]
-transformStmts _ _ [] = []
+transformStmts ::
+     GHC.DynFlags
+  -> [Loc]
+  -> [LStmt GhcPs (LHsExpr GhcPs)]
+  -> StateT Int GHC.Hsc [LStmt GhcPs (LHsExpr GhcPs)]
+transformStmts _ _ [] = pure []
 transformStmts dflags locs (current:rest)
-  | stmtIsEarly locs current =
-    transformStmt current (transformStmts dflags locs rest)
-  | otherwise = current : transformStmts dflags locs rest
+  | stmtIsEarly locs current = do
+    modify' (+1)
+    stmts <- transformStmts dflags locs rest
+    pure (transformStmt current stmts)
+  | otherwise = fmap (current :) (transformStmts dflags locs rest)
 
 transformStmt ::
      LStmt GhcPs (LHsExpr GhcPs)
