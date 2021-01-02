@@ -5,7 +5,11 @@ Add early return to any monad
 ## Description
 
 This package is a GHC plugin to add special syntax for early return in
-`do`-notation.
+`do`-notation. It provides a way to terminate the current monad with a
+result, usually a failure result, but not necessarily.
+
+It should not be confused with an exception handler. It uses regular
+values everywhere.
 
 The plugin is enabled in any module via a pragma.
 
@@ -25,6 +29,29 @@ app = do
 ```
 
 That's it! See `test/Main.hs` for full example.
+
+## Details
+
+The syntax `stmt?` is desugared in this way:
+
+* `do stmt?; next` becomes `do earlyThen stmt next`
+* `do pat <- stmt?; next; next2` becomes `do early stmt (\pat -> do next; next2; ...)`
+
+The `early` and `earlyThen` are driven by the `Early` class, which any
+functor-like data type can implement.
+
+``` haskell
+class Functor f => Early f where
+  dispatch :: Applicative m => f a -> (a -> m (f b)) -> m (f b)
+```
+
+Two provided instances out of the box are `Either e` and `Maybe`.
+
+## Inspiration
+
+The syntax and concept of using simple return values for early
+termination and failure handling is inspired
+[by Rust's error handling](https://doc.rust-lang.org/rust-by-example/error/result/enter_question_mark.html).
 
 ## Special thanks
 
