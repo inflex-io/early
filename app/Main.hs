@@ -7,6 +7,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
 {-# OPTIONS_GHC -fno-warn-missing-fields -fno-warn-orphans #-}
+
+-- | This is the preprocessor that extracts ? from the module, retaining
+-- their positions, and then passes them to the compiler plugin.
+--
+
+-- © 2020 Sky Above Limited
+-- © 2018 Mark Karpov
+
 module Main (main) where
 import                            Control.Monad
 import                            Data.HashMap.Strict (HashMap)
