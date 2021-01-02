@@ -44,6 +44,7 @@ can write this:
 app :: IO (Either Error String)
 app = do
   path <- grabEnv "PATH"?
+  putStrLn "Look ma, no lifts!"
   magic <- grabEnv "MAGIC"?
   pure (Right (path ++ magic))
 ```
