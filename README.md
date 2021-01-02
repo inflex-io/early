@@ -59,6 +59,9 @@ The syntax and concept of using simple return values for early
 termination and failure handling is inspired
 [by Rust's error handling](https://doc.rust-lang.org/rust-by-example/error/result/enter_question_mark.html).
 
+Motivation explained in detail in
+[my recoverable errors post](https://chrisdone.com/posts/try-do/).
+
 ## Special thanks
 
 The following people's work helped me to get my work done faster.
