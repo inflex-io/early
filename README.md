@@ -66,6 +66,6 @@ Motivation explained in detail in
 
 The following people's work helped me a lot to get my work done faster:
 
-* Neil Mitchell and Shayne Fletcher https://github.com/digital-asset/ghc-lib
+* Shayne Fletcher and Neil Mitchell https://github.com/digital-asset/ghc-lib
 * Oleg Grenrus https://github.com/phadej/idioms-plugins
 * Mark Karpov https://github.com/mrkkrp/ghc-syntax-highlighter
