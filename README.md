@@ -102,7 +102,7 @@ Additionally, one can take a Rust-like view of error handling in
 Haskell:
 
 |Use-case|Haskell|Rust|
-|---:|---:|
+|---:|---:|---:|
 |Unrecoverable errors|Throwing exceptions|Panics|
 |Recoverable errors|Return `Either`/`Maybe`|Return `Result`/`Some`|
 
