@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5ae0239a35301a0f1537fc98a9a61ef3fbb321c208c6d115ebb6591c1e77dc5f
+-- hash: c935b1e21750bdb2fab384011ff853a65af785534d5acb68cf2490d3af52781f
 
 name:           early
 version:        0.0.0
@@ -25,6 +25,7 @@ source-repository head
 library
   exposed-modules:
       Control.Early
+      Data.Early
       EarlyPlugin
   other-modules:
       Paths_early
@@ -33,6 +34,7 @@ library
   ghc-options: -Wall
   build-depends:
       base >=4.7 && <5
+    , containers
     , ghc
     , syb
     , text

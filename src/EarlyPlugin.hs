@@ -9,7 +9,6 @@ import                 Control.Monad.Trans.State.Strict
 import qualified       Data.Generics as SYB
 import                 Data.Text (Text)
 import qualified       Data.Text as T
-import qualified "ghc" ErrUtils as Err
 import qualified "ghc" GhcPlugins as GHC
 import "ghc"           HsExtension (GhcPs)
 import "ghc"           HsSyn

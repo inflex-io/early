@@ -19,6 +19,7 @@ library:
   - syb
   - text
   - transformers
+  - containers
 
 executables:
   early:
