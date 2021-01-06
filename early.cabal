@@ -4,11 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c935b1e21750bdb2fab384011ff853a65af785534d5acb68cf2490d3af52781f
+-- hash: 7c267bac1eef5336a088a22b865353f3c8f7ac23d785d3fe187d43fb7b5454d4
 
 name:           early
 version:        0.0.0
+synopsis:       Early return syntax in do-notation (GHC plugin)
 description:    Please see the README on GitHub at <https://github.com/inflex-io/early#readme>
+category:       Development
 homepage:       https://github.com/inflex-io/early#readme
 bug-reports:    https://github.com/inflex-io/early/issues
 author:         Sky Above Limited
@@ -17,6 +19,8 @@ copyright:      2021 Chris Done
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
+extra-source-files:
+    README.md
 
 source-repository head
   type: git

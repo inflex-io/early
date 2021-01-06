@@ -6,6 +6,10 @@ author:              Sky Above Limited
 maintainer:          chris@skyabove.io
 copyright:           "2021 Chris Done"
 description:         Please see the README on GitHub at <https://github.com/inflex-io/early#readme>
+extra-source-files:  README.md
+license-file:        LICENSE
+category: Development
+synopsis: Early return syntax in do-notation (GHC plugin)
 
 dependencies:
 - base >= 4.7 && < 5
