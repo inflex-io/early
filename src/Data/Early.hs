@@ -26,15 +26,25 @@ instance FoldableEarly Seq where
 class Traversable t => TraversableEarly t where
   traverseE :: (Monad m, Early f, Applicative f)
             => (a -> m (f b)) -> t a -> m (f (t b))
+  traverseE_ :: (Monad m, Early f, Applicative f)
+            => (a -> m (f b)) -> t a -> m (f ())
 
 instance TraversableEarly [] where
   traverseE f = go []
     where
       go acc [] = pure (pure (reverse acc))
       go acc (x:xs) = early (f x) (\x' -> go (x' : acc) xs)
+  traverseE_ f = go
+    where
+      go [] = pure (pure ())
+      go (x:xs) = early (f x) (const (go xs))
 
 instance TraversableEarly Seq where
   traverseE f = go mempty
     where
       go acc Seq.Empty = pure (pure acc)
       go acc (x Seq.:<| xs) = early (f x) (\x' -> go (acc Seq.:|> x') xs)
+  traverseE_ f = go
+    where
+      go Seq.Empty = pure (pure ())
+      go (x Seq.:<| xs) = early (f x) (const (go xs))
