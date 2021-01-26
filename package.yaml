@@ -24,6 +24,7 @@ library:
   - text
   - transformers
   - containers
+  - vector
 
 executables:
   early:
@@ -38,7 +39,6 @@ executables:
     - ghc-lib-parser
     - text
     - unordered-containers
-    - vector
 
 tests:
   early-test:
