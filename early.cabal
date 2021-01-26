@@ -43,6 +43,7 @@ library
     , syb
     , text
     , transformers
+    , vector
   default-language: Haskell2010
 
 executable early
