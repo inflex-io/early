@@ -167,7 +167,7 @@ earlyThenName = GHC.mkQual OccName.varName ("Control.Early","earlyThen")
 srcSpanFollowedBy :: Loc -> SrcSpan -> Bool
 srcSpanFollowedBy (Loc line col) sp =
   case sp of
-    RealSrcSpan s -> srcSpanEndLine s == line + 1 && srcSpanEndCol s == col
+    RealSrcSpan s -> srcSpanEndLine s == line && srcSpanEndCol s == col
     _ -> False
 
 data Loc = Loc

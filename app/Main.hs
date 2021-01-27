@@ -44,15 +44,14 @@ main = do
       T.writeFile
         output
         (T.concat
-           [ "{-# LINE 1 \"" <> T.pack input <> "\" #-}\n"
-           , "{-# OPTIONS -fplugin=EarlyPlugin -fplugin-opt=EarlyPlugin:"
+           [ "{-# OPTIONS -fplugin=EarlyPlugin -fplugin-opt=EarlyPlugin:"
            , T.intercalate
                ","
                (map
                   (\Loc {..} ->
                      T.intercalate ":" (map (T.pack . show) [line, col]))
                   qs)
-           , " #-}\n"
+           , " #-} "
            , strip (buildlocs qs) contents
            ])
       where qs = questions (filter (not . isComment . fst) tokens)
