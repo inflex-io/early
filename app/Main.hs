@@ -52,6 +52,7 @@ main = do
                      T.intercalate ":" (map (T.pack . show) [line, col]))
                   qs)
            , " #-} "
+           , "\n{-# LINE 1 " <> T.pack (show input) <> " #-}\n"
            , strip (buildlocs qs) contents
            ])
       where qs = questions (filter (not . isComment . fst) tokens)
